@@ -8,19 +8,18 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('tasks', function (Blueprint $table) {
+        Schema::create('votes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('topic_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('proposal_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('group_id')->constrained()->cascadeOnDelete();
-            $table->enum('status', ['pending', 'in_progress', 'done'])->default('pending');
-            $table->date('deadline')->nullable();
+            $table->boolean('vote'); // true = yes, false = no
             $table->timestamps();
+            $table->unique(['proposal_id', 'user_id']);
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('tasks');
+        Schema::dropIfExists('votes');
     }
 };
