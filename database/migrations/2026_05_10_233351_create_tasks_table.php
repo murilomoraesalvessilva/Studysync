@@ -8,19 +8,20 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('tasks', function (Blueprint $table) {
+        Schema::create('proposals', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('topic_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('group_id')->constrained()->cascadeOnDelete();
-            $table->enum('status', ['pending', 'in_progress', 'done'])->default('pending');
-            $table->date('deadline')->nullable();
+            $table->foreignId('proposer_id')->constrained('users')->cascadeOnDelete();
+            $table->enum('type', ['task_swap', 'topic_split', 'overload', 'deadline_extension']);
+            $table->text('description');
+            $table->enum('status', ['open', 'approved', 'rejected', 'expired'])->default('open');
+            $table->timestamp('expires_at')->nullable();
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('tasks');
+        Schema::dropIfExists('proposals');
     }
 };
